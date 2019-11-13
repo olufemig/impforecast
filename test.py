@@ -1,2 +1,2 @@
-msg = "Hello World everyone"
+msg = "Hello World peeps"
 print(msg)
