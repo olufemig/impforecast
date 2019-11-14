@@ -1,7 +1,8 @@
-import pyodbc
+import numpy as np
 import pandas as pd
+import azureml.core
+import os
 
-dfSales = pd.read_csv('data/format1.csv',header=0, index_col=None)
-dfSales.describe()
-msg = "hello"
-print(msg)
+dfSales = pd.read_csv('data/clean_data.csv')
+print(dfSales.head(5))
+
