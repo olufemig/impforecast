@@ -1,8 +1,9 @@
 import numpy as np
 import pandas as pd
 import azureml.core
+import azureml.train.automl
 import os
-import azureml
+import logging
 
 
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
@@ -10,6 +11,8 @@ from azureml.core.run import Run
 from azureml.core.model import Model
 from azureml.core.experiment import Experiment
 from datetime import datetime
+from azureml.train.automl import AutoMLConfig
+from azureml.train.estimator import Estimator
 
 time_column_name = 'dia_date'
 df = pd.read_csv('data/clean_data.csv',parse_dates=[time_column_name])
