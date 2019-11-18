@@ -19,6 +19,8 @@ df = pd.read_csv('data/clean_data.csv',parse_dates=[time_column_name])
 dfSales = df[['CUSTOMER_ID','BRANDPACK_ID','Sales_Vol','dia_date']]
 dfSales.Sales_Vol = pd.to_numeric(dfSales.Sales_Vol, errors='coerce').fillna(0, downcast='infer')
 print(dfSales.head(10))
+print(df.head(10))
+print(df.dtypes)
 print(dfSales.dtypes)
 
 # Fill in blank dates and data
