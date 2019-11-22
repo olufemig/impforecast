@@ -18,17 +18,35 @@ time_column_name = 'dia_date'
 df = pd.read_csv('data/clean_data.csv',parse_dates=[time_column_name])
 dfSales = df[['CUSTOMER_ID','BRANDPACK_ID','Sales_Vol','dia_date']]
 dfSales.Sales_Vol = pd.to_numeric(dfSales.Sales_Vol, errors='coerce').fillna(0, downcast='infer')
-print(dfSales.head(10))
-print(df.head(10))
-print(df.dtypes)
+
 print(dfSales.dtypes)
 
-# Fill in blank dates and data
-# dfSales.index=pd.to_datetime(df.dia_date).date
-# dfSales=dfSales.groupby([dfSales.index,df['CUSTOMER_ID'],df['BRANDPACK_ID']]).agg({'Sales_Vol':'sum'}).reset_index(level=[1,2])
-# drange=pd.date_range(end=df.index.max(),periods =5)
-# idx=pd.MultiIndex.from_product([drange,df.cust_id.unique(),df.txn_type.unique()])
-# Newdf=df.set_index(['cust_id','txn_type'],append=True).reindex(idx,fill_value=0).reset_index(level=[1,2])
-# Newdf
-# Setup AutoML parameters
-#
+
+shape2 = dfSales.set_index(['dia_date', 'BRANDPACK_ID', 'CUSTOMER_ID']).\
+  unstack([1, 2]).\
+  resample('D').asfreq().\
+  fillna(0).\
+  stack([1, 2]).\
+  reset_index()
+  
+ZeroSales = dfSales[dfSales.Sales_Vol == 0.00]
+
+#use this to determine all stores with product sales
+NonZeroSales = dfSales[dfSales.Sales_Vol != 0.00]
+df1 = NonZeroSales[['CUSTOMER_ID','BRANDPACK_ID']]
+NonZeroDuplicates = df1.drop_duplicates()
+
+  
+print('%d unique dates in original df' % dfSales['dia_date'].nunique())
+print('%d rows in original df' % len(dfSales))
+print('%d unique sales volumes in original df' % dfSales['Sales_Vol'].nunique())
+print('%d unique sales volume after filling missing values' % shape2['Sales_Vol'].nunique())
+print('%d unique dates after filling missing values' % shape2['dia_date'].nunique())
+print('%d rows in dataframe after filling missing values' % len(shape2))
+print('%d rows in dataframe with zero sales ' % len(ZeroSales))
+print('%d rows in dataframe with non-zero sales ' % len(NonZeroSales))
+print(NonZeroDuplicates.head(30))
+#print(dfSales.groupby('Sales_Vol').count())
+
+
+
